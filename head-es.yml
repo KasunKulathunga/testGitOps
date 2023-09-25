@@ -1,0 +1,30 @@
+apiVersion: elasticsearch.k8s.elastic.co/v1
+kind: Elasticsearch
+metadata:
+  name: quickstart
+spec:
+  version: 8.9.0
+  nodeSets:
+  - name: masters
+    count: 1
+    config:
+      # node.roles: ["master", "data"]
+      node.store.allow_mmap: false
+    volumeClaimTemplates:
+    - metadata:
+        name: elasticsearch-data # Do not change this name unless you set up a volume mount for the data path.
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 500Gi
+        storageClassName: azurefile
+  http:
+    service:
+      metadata:
+        annotations:
+          service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+          service.beta.kubernetes.io/azure-load-balancer-internal-subnet: "dcom-weu-sand-snet-ca-aks"    
+      spec:
+        type: LoadBalancer # default is ClusterIP
