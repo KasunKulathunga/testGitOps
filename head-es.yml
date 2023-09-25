@@ -1,5 +1,6 @@
 apiVersion: elasticsearch.k8s.elastic.co/v1
 kind: Elasticsearch
+namespace: elk
 metadata:
   name: quickstart
 spec:
